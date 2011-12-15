@@ -1930,7 +1930,6 @@ SYSCALL_DEFINE3(io_submit, aio_context_t, ctx_id, long, nr,
 	struct kioctx *ctx;
 	long ret = 0;
 	int i = 0;
-	struct blk_plug plug;
 
 	if (unlikely(nr < 0))
 		return -EINVAL;
@@ -1946,6 +1945,11 @@ SYSCALL_DEFINE3(io_submit, aio_context_t, ctx_id, long, nr,
 
 	blk_start_plug(&plug);
 	for (i = 0; i < nr; i++) {
+	/*
+	 * AKPM: should this return a partial result if some of the IOs were
+	 * successfully submitted?
+	 */
+	for (i=0; i<nr; i++) {
 		struct iocb __user *user_iocb;
 
 		if (unlikely(get_user(user_iocb, iocbpp + i))) {
@@ -1957,7 +1961,6 @@ SYSCALL_DEFINE3(io_submit, aio_context_t, ctx_id, long, nr,
 		if (ret)
 			break;
 	}
-	blk_finish_plug(&plug);
 
 	percpu_ref_put(&ctx->users);
 	return i ? i : ret;
