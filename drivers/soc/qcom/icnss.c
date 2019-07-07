@@ -3536,7 +3536,21 @@ static void icnss_sysfs_destroy(struct icnss_priv *priv)
 	icnss_kobject = priv->icnss_kobject;
 	if (icnss_kobject)
 		kobject_put(icnss_kobject);
+
+static void icnss_debugfs_destroy(struct icnss_priv *priv)
+{
+        debugfs_remove_recursive(priv->root_dentry);
 }
+
+#else
+static int inline icnss_debugfs_create(struct icnss_priv *priv)
+{
+	return 0;
+}
+static void inline icnss_debugfs_destroy(struct icnss_priv *priv)
+{
+}
+#endif
 
 static void icnss_unregister_power_supply_notifier(struct icnss_priv *priv)
 {
