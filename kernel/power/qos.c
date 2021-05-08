@@ -690,7 +690,6 @@ void pm_qos_update_request_timeout(struct pm_qos_request *req, s32 new_value,
 		pm_qos_update_target(
 			pm_qos_array[req->pm_qos_class]->constraints,
 			&req->node, PM_QOS_UPDATE_REQ, new_value);
-
 }
 EXPORT_SYMBOL_GPL(pm_qos_update_request_timeout);
 
