@@ -178,9 +178,9 @@ unsigned int sched_capacity_margin_down_boosted[CPU_NR] = {
 }; /* not used for small cores, 72% margin for big, 72% margin for big+ */
 
 /* 1ms default for 20ms window size scaled to 1024 */
-unsigned int sysctl_sched_min_task_util_for_boost = 51;
+unsigned int sysctl_sched_min_task_util_for_boost = 61;
 /* 0.68ms default for 20ms window size scaled to 1024 */
-unsigned int sysctl_sched_min_task_util_for_colocation = 35;
+unsigned int sysctl_sched_min_task_util_for_colocation = 45;
 __read_mostly unsigned int sysctl_sched_prefer_spread;
 unsigned int sched_small_task_threshold = 102;
 __read_mostly unsigned int sysctl_sched_force_lb_enable = 1;
