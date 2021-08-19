@@ -5456,6 +5456,12 @@ static inline void hrtick_update(struct rq *rq)
 #ifdef CONFIG_SMP
 static unsigned long capacity_of(int cpu);
 
+static inline bool cpu_check_overutil_condition(int cpu,
+						unsigned long util)
+{
+	return (capacity_orig_of(cpu) * 1024) < (util * capacity_margin);
+}
+
 bool __cpu_overutilized(int cpu, int delta)
 {
 	return (capacity_orig_of(cpu) * 1024) <
@@ -7231,6 +7237,8 @@ static void find_best_target(struct sched_domain *sd, cpumask_t *cpus,
 			if (idle_cpu(i))
 				idle_idx = idle_get_state_idx(cpu_rq(i));
 
+if (cpu_check_overutil_condition(i, new_util))
+				continue;
 
 			/*
 			 * Case A) Latency sensitive tasks
@@ -10799,8 +10807,10 @@ static int need_active_balance(struct lb_env *env)
 	 * It's worth migrating the task if the src_cpu's capacity is reduced
 	 * because of other sched_class or IRQs if more capacity stays
 	 * available on dst_cpu.
+ * Avoid pulling the CFS task if it is the only task running.
 	 */
 	if ((env->idle != CPU_NOT_IDLE) &&
+(env->src_rq->nr_running > 1) &&
 	    (env->src_rq->cfs.h_nr_running == 1)) {
 		if ((check_cpu_capacity(env->src_rq, sd)) &&
 		    (capacity_of(env->src_cpu)*sd->imbalance_pct < capacity_of(env->dst_cpu)*100))
