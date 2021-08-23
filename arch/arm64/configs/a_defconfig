@@ -360,7 +360,7 @@ CONFIG_PCI_MSM_MSI=y
 # CONFIG_PCI_HISI is not set
 # CONFIG_PCIE_QCOM is not set
 # CONFIG_PCIE_KIRIN is not set
-
+CONFIG_IKHEADERS=y
 #
 # PCI Endpoint
 #
